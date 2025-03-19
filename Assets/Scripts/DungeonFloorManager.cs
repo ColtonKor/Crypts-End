@@ -469,7 +469,7 @@ public class DungeonFloorManager : MonoBehaviour, IDataPersistence
             if (rb != null)
             {
                 rb.isKinematic = true;
-                rb.velocity = Vector3.zero;
+                rb.linearVelocity = Vector3.zero;
             }
 
             if (cc != null)

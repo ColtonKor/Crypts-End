@@ -77,7 +77,7 @@ public class EnemyBehavior : MonoBehaviour
     {
         if (enemyStun.isStunned)
         {
-            rb.velocity = Vector3.zero; // Stop all movement while stunned
+            rb.linearVelocity = Vector3.zero; // Stop all movement while stunned
             return;
         }
 
@@ -212,8 +212,8 @@ public class EnemyBehavior : MonoBehaviour
         anim.SetBool("Walk", true);
         Vector3 direction = (target - transform.position).normalized;
         Vector3 velocity = direction * speed;
-        velocity.y = rb.velocity.y;
-        rb.velocity = velocity;
+        velocity.y = rb.linearVelocity.y;
+        rb.linearVelocity = velocity;
     }
 
     private void RotateTowards(Vector3 targetPosition)

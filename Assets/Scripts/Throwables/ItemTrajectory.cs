@@ -42,7 +42,7 @@ public class ItemTrajectory : MonoBehaviour
 
         for (int i = 1; i < numPoints; i++) {
             nextVel += gravity * timeStep;
-            nextVel *= (1 - rb.drag * timeStep);
+            nextVel *= (1 - rb.linearDamping * timeStep);
             nextPos += nextVel * timeStep;
 
             RaycastHit hit;
