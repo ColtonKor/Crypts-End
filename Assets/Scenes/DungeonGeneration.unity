@@ -38,12 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -179,6 +179,7 @@ MeshRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -460,7 +461,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6874423088362089200, guid: 59880cb529456a54eace0de7e803c469, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.4869802
+      value: -3.4367688
       objectReference: {fileID: 0}
     - target: {fileID: 6874423088362089200, guid: 59880cb529456a54eace0de7e803c469, type: 3}
       propertyPath: m_LocalPosition.y
@@ -468,7 +469,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6874423088362089200, guid: 59880cb529456a54eace0de7e803c469, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -11.253197
+      value: -11.2752075
       objectReference: {fileID: 0}
     - target: {fileID: 7510231428833266310, guid: 59880cb529456a54eace0de7e803c469, type: 3}
       propertyPath: m_LocalPosition.y
@@ -480,7 +481,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7918603444964675484, guid: 59880cb529456a54eace0de7e803c469, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.5474197
+      value: -0.5055769
       objectReference: {fileID: 0}
     - target: {fileID: 7918603444964675484, guid: 59880cb529456a54eace0de7e803c469, type: 3}
       propertyPath: m_LocalPosition.y
@@ -488,7 +489,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7918603444964675484, guid: 59880cb529456a54eace0de7e803c469, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.21391231
+      value: 0.19556998
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -617,9 +618,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyParent: {fileID: 679001799}
   enemyPrefabs:
-  - {fileID: 7688541550393679934, guid: 19e7a67704dfa054291da823b3b362a3, type: 3}
-  - {fileID: 8347136970724159149, guid: 70a0038d63871e34d907a965e60e2572, type: 3}
-  - {fileID: 2722564011504397241, guid: 3b50e52e21b62cf439944e78e45fa25c, type: 3}
+  - {fileID: 3143392024984910770, guid: f89d73ef48721334fafd1a61fbf0ead5, type: 3}
+  - {fileID: 5668467045423951422, guid: 273687ae16c8aa54baace42538a2351d, type: 3}
+  - {fileID: 7671869839449343624, guid: 6da4c3d90647056499f03da2e1cf3cf7, type: 3}
+  - {fileID: 306428612806820135, guid: 50acd87d6c24e354bbc9891fbc8aaea9, type: 3}
   baseSpawnChance: 0.3
   incrementPerFloor: 0.1
   maxSpawnChance: 1

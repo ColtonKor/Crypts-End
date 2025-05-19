@@ -428,7 +428,8 @@ public class DungeonFloorManager : MonoBehaviour, IDataPersistence
 
     private IEnumerator TeleportPlayerToNewFloor(GameObject newFloor)
     {
-        yield return new WaitForEndOfFrame();
+        // yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(1f);
 
         // Find player
         GameObject player = null;

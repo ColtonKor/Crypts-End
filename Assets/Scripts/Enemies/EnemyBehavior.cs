@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
 public class EnemyBehavior : MonoBehaviour
 {
-    public enum EnemyType { Melee, Ranged } // Define types of enemies
+    public enum EnemyType { Melee, Ranged, Shy } // Define types of enemies
     public EnemyType enemyType; // Choose Melee or Ranged in the Inspector
 
     public Transform[] waypoints;
@@ -14,7 +14,6 @@ public class EnemyBehavior : MonoBehaviour
     public float chaseStopRange = 6f;
 
     public bool blindMode; // Enable blind mode in the Inspector
-    public float sprintDetectionBoost = 10f; // Extra detection range when the player is sprinting
     private bool isPlayerSprinting = false;
     private bool isPlayerRolling = false;
 
@@ -27,10 +26,14 @@ public class EnemyBehavior : MonoBehaviour
     // Melee-specific properties
     public float meleeAttackRange = 1.5f;
     public float meleeBlindAttackRange = 1.2f;
-    public float meleeAttackCooldown = 1f;
     public float meleeDamage = 20f;
+    
+    //Shy-specific properties
+    public float distanceToActivate = 25f;
+    public float viewAngle = 60f;
 
     public Transform player;
+    private Camera playerCamera;
 
     private int currentWaypointIndex = 0;
     private bool isChasing = false;
@@ -39,8 +42,6 @@ public class EnemyBehavior : MonoBehaviour
     private CapsuleCollider capsuleCollider;
     private float lastAttackTime = 0f;
 
-    public float obstacleDetectionDistance = 1.5f; // Distance to check for obstacles
-    public float jumpForce = 5f; // Force applied to the enemy's Rigidbody for jumping
     private EnemyStun enemyStun;
     private Animator anim;
 
@@ -48,6 +49,7 @@ public class EnemyBehavior : MonoBehaviour
     private Vector3 randomTarget;
     private float timeToNextRandomMove = 0f;
     public bool attackReady = true;
+    private bool isSeen;
 
     public delegate void TakeDamage(float damage);
     public static event TakeDamage HitPlayer;
@@ -55,6 +57,8 @@ public class EnemyBehavior : MonoBehaviour
     public delegate void HumanBonked();
     public static event HumanBonked playerSound;
     public static event HumanBonked fire;
+    
+    public void SetSeen(bool seen) => isSeen = seen;
 
     private void Start()
     {
@@ -71,6 +75,7 @@ public class EnemyBehavior : MonoBehaviour
         }
         anim.SetBool("Walk", true);
         player = FindAnyObjectByType<PlayerMovement>().gameObject.transform;
+        playerCamera = Camera.main;
     }
 
     private void Update()
@@ -78,7 +83,13 @@ public class EnemyBehavior : MonoBehaviour
         if (enemyStun.isStunned)
         {
             rb.linearVelocity = Vector3.zero; // Stop all movement while stunned
+            anim.SetBool("Walk", false);
             return;
+        }
+
+        if (rb.linearVelocity.magnitude < 0.1f)
+        {
+            anim.SetBool("Walk", false);  
         }
 
         // Check player's sprinting state
@@ -93,6 +104,8 @@ public class EnemyBehavior : MonoBehaviour
             HandleBlindModeLogic();
         } else if(enemyType == EnemyType.Ranged){
             HandleRangedLogic();
+        } else if (enemyType == EnemyType.Shy) {
+            HandleShyLogic();
         } else {
             HandleNormalLogic();
         }
@@ -100,7 +113,6 @@ public class EnemyBehavior : MonoBehaviour
 
     private void HandleBlindModeLogic()
     {
-        float effectiveDetectionRange = meleeAttackRange;
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
         
@@ -108,9 +120,9 @@ public class EnemyBehavior : MonoBehaviour
         if (distanceToPlayer <= meleeBlindAttackRange){
             // Blind enemy is dangerous in melee range or if the player is sprinting nearby
             AttackMelee();
-        } else if (distanceToPlayer <= sprintDetectionBoost && (isPlayerSprinting || isPlayerRolling)){
+        } else if (distanceToPlayer <= detectionRange && (isPlayerSprinting || isPlayerRolling)){
             ChasePlayer();
-        } else if (distanceToPlayer > sprintDetectionBoost){
+        } else if (distanceToPlayer > detectionRange){
             PatrolOrWander();
         }
     }
@@ -124,7 +136,30 @@ public class EnemyBehavior : MonoBehaviour
         {
             RotateTowards(player.position);
             AttackRanged();
-        } else if (distanceToPlayer > sprintDetectionBoost){
+        } else if (distanceToPlayer > detectionRange){
+            PatrolOrWander();
+        }
+    }
+    
+    private void HandleShyLogic()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        
+        if (distanceToPlayer <= attackRange)
+        {
+            RotateTowards(player.position);
+            AttackMelee();
+        } 
+        else if (distanceToPlayer <= detectionRange && !isSeen)
+        {
+            ChasePlayer();
+        } 
+        else if(distanceToPlayer <= detectionRange && isSeen)
+        {
+            StopMovement();
+        }
+        else
+        {
             PatrolOrWander();
         }
     }
@@ -263,5 +298,11 @@ public class EnemyBehavior : MonoBehaviour
             StartCoroutine(AttackCooldown());
             // Optionally, apply damage directly to the player's health script (if implemented)
         }
+    }
+    
+    private void StopMovement()
+    {
+        rb.linearVelocity = Vector3.zero;
+        anim.SetBool("Walk", false);
     }
 }
